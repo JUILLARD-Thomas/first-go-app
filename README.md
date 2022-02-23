@@ -4,17 +4,12 @@
 
 ### For run app
 
-```
-# build images
-docker-compose build --no-cache
-
-# run images
-docker-compose up
-
-```
+> `docker-compose up -d --build --remove-orphans`
 
 ### For quit app
 
-```
-docker-compose down
-```
+> `docker-compose down`
+
+### Check BDD
+
+> `docker exec -it postgres psql -U user`
