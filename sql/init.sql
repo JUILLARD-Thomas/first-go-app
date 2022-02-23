@@ -1,24 +1,13 @@
-CREATE TABLE IF NOT EXISTS product (
-  product_id INT NOT NULL,
-  name varchar(250) NOT NULL,
-  PRIMARY KEY (product_id)
+CREATE TYPE type_enum AS ENUM ('impression', 'click', 'visible');
+
+
+CREATE TABLE IF NOT EXISTS event (
+  type_enum type_enum,
+  user_agent varchar(250) NOT NULL,
+  ip varchar(250) NOT NULL,
+  ts timestamp NOT NULL,
+  PRIMARY KEY (ts)
 );
 
-...
 
-...
-
--- Creation of order_status table
-CREATE TABLE IF NOT EXISTS order_status (
-  order_status_id varchar(200) NOT NULL,
-  update_at TIMESTAMP,
-  sale_id varchar(200) NOT NULL,
-  status_name_id INT NOT NULL,
-  PRIMARY KEY (order_status_id),
-  CONSTRAINT fk_sale
-      FOREIGN KEY(sale_id)
-    REFERENCES sale(sale_id),
-  CONSTRAINT fk_status_name
-      FOREIGN KEY(status_name_id)
-    REFERENCES status_name(status_name_id)
-);
+INSERT INTO event VALUES ('impression', 'mock-user-agent', 'mock-ip', current_timestamp);
