@@ -25,6 +25,8 @@ RUN go mod download
 # Now, copy the source code
 COPY . .
 
+COPY cmd/app/main.go .
+
 # Note here: CGO_ENABLED is disabled for cross system compilation
 # It is also a common best practise.
 
