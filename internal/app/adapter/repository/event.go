@@ -13,13 +13,15 @@ type Event struct{}
 // Get gets parameter
 func (r Event) Get() domain.Event {
 	db := postgresql.Connection()
-	var param model.Event
-	result := db.First(&param, 1)
+	var event model.Event
+	result := db.Take(&event)
 	if result.Error != nil {
 		panic(result.Error)
 	}
-	return domain.Event{ // TODO change value
-		Funds: 10,
-		Btc:   8,
+	return domain.Event{
+		Type_enum:  event.Type_enum,
+		User_agent: event.User_agent,
+		Ip:         event.Ip,
+		Ts:         event.Ts,
 	}
 }

@@ -1,7 +1,10 @@
 package domain
 
 // Parameter is trading parameter
+
 type Event struct {
-	Funds int
-	Btc   int
+	Type_enum  string
+	User_agent string
+	Ip         string
+	Ts         string
 }

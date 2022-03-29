@@ -6,7 +6,7 @@ import (
 	"first-go-app/internal/app/domain/repository"
 )
 
-// Parameter is the usecase of getting parameter
+// Event is the usecase of getting event
 func Event(r repository.IEvent) domain.Event {
 	return r.Get()
 }
