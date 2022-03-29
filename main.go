@@ -1,12 +1,9 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
-	"log"
-	"net/http"
+	"first-go-app/internal/app/adapter"
 
-	_ "github.com/lib/pq"
+	"github.com/spf13/viper"
 )
 
 const (
@@ -18,28 +15,15 @@ const (
 )
 
 func main() {
-	http.HandleFunc("/", hello)
-	fmt.Println("Server started")
+	r := adapter.Router()
 
-	// connStr := fmt.Sprintf("user=%s dbname=%s sslmode=disable", user, dbname)
+	// for local development
+	viper.SetDefault("PGHOST", "postgres")
+	viper.SetDefault("PGUSER", "user")
+	viper.SetDefault("PGPASSWORD", "password")
 
-	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s  sslmode=disable",
-		host, port, user, password)
-	db, err := sql.Open("postgres", connStr)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer db.Close()
-
-	fmt.Println("Successfully connected:", db.Ping() == nil)
-
-	log.Fatal(http.ListenAndServe(":8080", nil))
-
-}
-
-func hello(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte(`{"message":"hello Thomas! How are you today ?", "response":"I'm fine."}`))
+	viper.BindEnv("PGHOST", host)
+	viper.BindEnv("PGUSER", user)
+	viper.BindEnv("PGPASSWORD", user)
+	r.Run(":8080")
 }
