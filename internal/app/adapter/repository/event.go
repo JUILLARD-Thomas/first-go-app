@@ -10,8 +10,8 @@ import (
 // Event is the repository of domain.Event
 type Event struct{}
 
-// Get gets event
-func (r Event) Get(from, to string) []domain.Event {
+// Get event
+func (r Event) Get(from, to string) ([]domain.Event, error) {
 	db := postgresql.Connection()
 	var events []model.Event
 	var result postgresql.DB
@@ -25,11 +25,11 @@ func (r Event) Get(from, to string) []domain.Event {
 	} else {
 		result = db.Where("ts BETWEEN ? AND ?", from, to).Find(&events)
 	}
+	result_events := make([]domain.Event, result.RowsAffected)
 
 	if result.Error != nil {
-		panic(result.Error)
+		return result_events, result.Error
 	}
-	result_events := make([]domain.Event, result.RowsAffected)
 
 	for i, event := range events {
 		result_events[i] = domain.Event{
@@ -39,10 +39,10 @@ func (r Event) Get(from, to string) []domain.Event {
 			Ts:         event.Ts,
 		}
 	}
-	return result_events
+	return result_events, nil
 }
 
-// Get gets event
+// Create event
 func (r Event) Post(post_event domain.Event) (domain.Event, error) {
 	db := postgresql.Connection()
 	event := model.Event{

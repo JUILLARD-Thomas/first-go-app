@@ -22,9 +22,8 @@ type EventArgsCreate struct {
 }
 
 // Event is the usecase of getting event
-func Event(e EventArgs) []domain.Event {
-	events := e.R.Get(e.FROM, e.TO)
-	return events
+func Event(e EventArgs) ([]domain.Event, error) {
+	return e.R.Get(e.FROM, e.TO)
 }
 
 func CreateEvent(e EventArgsCreate) (domain.Event, error) {

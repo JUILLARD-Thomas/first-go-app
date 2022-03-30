@@ -35,14 +35,26 @@ func (ctrl Controller) index(c *gin.Context) {
 }
 
 func (ctrl Controller) event(c *gin.Context) {
-
 	args := usecase.EventArgs{
 		R:    EventRepository, // Dependency Injection
 		FROM: c.Query("from"),
 		TO:   c.Query("to"),
 	}
-	events := usecase.Event(args)
-	c.JSON(200, serializer.GroupByTypeAndOs(events))
+	events, error := usecase.Event(args)
+
+	if error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": error.Error()})
+	} else {
+		if c.Query("groupByType") == "true" && c.Query("groupByOs") == "true" {
+			c.JSON(http.StatusOK, serializer.GroupByTypeAndOs(events))
+		} else if c.Query("groupByType") == "true" {
+			c.JSON(http.StatusOK, serializer.GroupByType(events))
+		} else if c.Query("groupByOs") == "true" {
+			c.JSON(http.StatusOK, serializer.GroupByOs(events))
+		} else {
+			c.JSON(http.StatusOK, events)
+		}
+	}
 }
 
 func (ctrl Controller) cout_event(c *gin.Context) {
