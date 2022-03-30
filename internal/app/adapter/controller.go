@@ -34,8 +34,8 @@ func (ctrl Controller) event(c *gin.Context) {
 
 	args := usecase.EventArgs{
 		R:   EventRepository, // Dependency Injection
-		MAX: "",
-		MIN: "",
+		MAX: c.Query("MAX"),
+		MIN: c.Query("MIN"),
 	}
 	events := usecase.Event(args)
 

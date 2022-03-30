@@ -19,11 +19,11 @@ func (r Event) Get(min, max string) []domain.Event {
 	if min == "" && max == "" {
 		result = db.Find(&events)
 	} else if min == "" {
-		result = db.Where("Ts < ?", max).Find(&events)
+		result = db.Where("ts <= ?", max).Find(&events)
 	} else if max == "" {
-		result = db.Where("Ts > ?", min).Find(&events)
+		result = db.Where("ts >= ?", min).Find(&events)
 	} else {
-		result = db.Where("Ts BETWEEN ? AND ?", min, max).Find(&events)
+		result = db.Where("ts BETWEEN ? AND ?", min, max).Find(&events)
 	}
 
 	if result.Error != nil {

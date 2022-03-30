@@ -6,7 +6,7 @@ import (
 	"first-go-app/internal/app/domain/repository"
 )
 
-// OhlcArgs are arguments of Ohlc usecase
+// EventArgs are arguments of Event usecase
 type EventArgs struct {
 	R   repository.IEvent // Interface
 	MAX string
@@ -15,5 +15,5 @@ type EventArgs struct {
 
 // Event is the usecase of getting event
 func Event(e EventArgs) []domain.Event {
-	return e.R.Get(e.MAX, e.MIN)
+	return e.R.Get(e.MIN, e.MAX)
 }
