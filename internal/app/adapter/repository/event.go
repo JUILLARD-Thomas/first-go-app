@@ -11,19 +11,19 @@ import (
 type Event struct{}
 
 // Get gets event
-func (r Event) Get(min, max string) []domain.Event {
+func (r Event) Get(from, to string) []domain.Event {
 	db := postgresql.Connection()
 	var events []model.Event
 	var result postgresql.DB
 
-	if min == "" && max == "" {
+	if from == "" && to == "" {
 		result = db.Find(&events)
-	} else if min == "" {
-		result = db.Where("ts <= ?", max).Find(&events)
-	} else if max == "" {
-		result = db.Where("ts >= ?", min).Find(&events)
+	} else if from == "" {
+		result = db.Where("ts <= ?", to).Find(&events)
+	} else if to == "" {
+		result = db.Where("ts >= ?", from).Find(&events)
 	} else {
-		result = db.Where("ts BETWEEN ? AND ?", min, max).Find(&events)
+		result = db.Where("ts BETWEEN ? AND ?", from, to).Find(&events)
 	}
 
 	if result.Error != nil {

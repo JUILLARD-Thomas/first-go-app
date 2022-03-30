@@ -8,12 +8,12 @@ import (
 
 // EventArgs are arguments of Event usecase
 type EventArgs struct {
-	R   repository.IEvent // Interface
-	MAX string
-	MIN string
+	R    repository.IEvent // Interface
+	FROM string
+	TO   string
 }
 
 // Event is the usecase of getting event
 func Event(e EventArgs) []domain.Event {
-	return e.R.Get(e.MIN, e.MAX)
+	return e.R.Get(e.FROM, e.TO)
 }
