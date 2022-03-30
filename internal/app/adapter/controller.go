@@ -10,6 +10,7 @@ import (
 
 var (
 	EventRepository = repository.Event{}
+	EventArgs       = usecase.EventArgs{}
 )
 
 // Controller is a controller
@@ -30,6 +31,14 @@ func (ctrl Controller) index(c *gin.Context) {
 }
 
 func (ctrl Controller) event(c *gin.Context) {
-	event := usecase.Event(EventRepository) // Dependency Injection
-	c.JSON(200, event)
+
+	args := usecase.EventArgs{
+		R:   EventRepository, // Dependency Injection
+		MAX: "",
+		MIN: "",
+	}
+	events := usecase.Event(args)
+
+	//events := usecase.Event(EventArgs) // Dependency Injection
+	c.JSON(200, events)
 }

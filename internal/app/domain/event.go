@@ -1,6 +1,6 @@
 package domain
 
-// Parameter is trading parameter
+// Event is trading event
 
 type Event struct {
 	Type_enum  string

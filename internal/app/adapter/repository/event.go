@@ -7,21 +7,37 @@ import (
 	"first-go-app/internal/app/domain"
 )
 
-// Parameter is the repository of domain.Parameter
+// Event is the repository of domain.Event
 type Event struct{}
 
-// Get gets parameter
-func (r Event) Get() domain.Event {
+// Get gets event
+func (r Event) Get(min, max string) []domain.Event {
 	db := postgresql.Connection()
-	var event model.Event
-	result := db.Take(&event)
+	var events []model.Event
+	var result postgresql.DB
+
+	if min == "" && max == "" {
+		result = db.Find(&events)
+	} else if min == "" {
+		result = db.Where("Ts < ?", max).Find(&events)
+	} else if max == "" {
+		result = db.Where("Ts > ?", min).Find(&events)
+	} else {
+		result = db.Where("Ts BETWEEN ? AND ?", min, max).Find(&events)
+	}
+
 	if result.Error != nil {
 		panic(result.Error)
 	}
-	return domain.Event{
-		Type_enum:  event.Type_enum,
-		User_agent: event.User_agent,
-		Ip:         event.Ip,
-		Ts:         event.Ts,
+	result_events := make([]domain.Event, result.RowsAffected)
+
+	for i, event := range events {
+		result_events[i] = domain.Event{
+			Type_enum:  event.Type_enum,
+			User_agent: event.User_agent,
+			Ip:         event.Ip,
+			Ts:         event.Ts,
+		}
 	}
+	return result_events
 }

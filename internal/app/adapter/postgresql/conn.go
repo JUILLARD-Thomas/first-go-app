@@ -10,13 +10,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-const (
-	host     = "postgres"
-	port     = 5432
-	user     = "user"
-	password = "password"
-	dbname   = "user"
-)
+type DB *gorm.DB
 
 // Connection gets connection of postgresql database
 func Connection() (db *gorm.DB) {

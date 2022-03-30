@@ -2,7 +2,7 @@ package repository
 
 import "first-go-app/internal/app/domain"
 
-// IParameter is interface of parameter repository
+// IEvent is interface of event repository
 type IEvent interface {
-	Get() domain.Event
+	Get(string, string) []domain.Event
 }
