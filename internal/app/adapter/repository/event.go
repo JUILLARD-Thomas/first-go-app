@@ -41,3 +41,40 @@ func (r Event) Get(from, to string) []domain.Event {
 	}
 	return result_events
 }
+
+// Get gets event
+func (r Event) Post(post_event domain.Event) (domain.Event, error) {
+	db := postgresql.Connection()
+	event := model.Event{
+		Type_enum:  post_event.Type_enum,
+		User_agent: post_event.User_agent,
+		Ip:         post_event.Ip,
+		Ts:         post_event.Ts,
+	}
+	result := db.Omit("id").Create(&event)
+
+	if result.Error != nil {
+		panic(result.Error)
+	}
+
+	return domain.Event{
+		Type_enum:  event.Type_enum,
+		User_agent: event.User_agent,
+		Ip:         event.Ip,
+		Ts:         event.Ts,
+	}, nil
+}
+
+func (r Event) Count() (int64, error) {
+	db := postgresql.Connection()
+	var count int64
+	var event model.Event
+	var result postgresql.DB
+
+	result = db.Find(&event).Count(&count)
+
+	if result.Error != nil {
+		panic(result.Error)
+	}
+	return count, nil
+}
